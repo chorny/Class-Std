@@ -576,7 +576,7 @@ sub AUTOLOAD {
             }
         }
 
-        return;
+        goto &$real_can;
     };
 }
 
