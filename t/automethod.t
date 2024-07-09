@@ -1,3 +1,6 @@
+package Empty;
+use Class::Std;
+
 package Common;
 use Class::Std;
 {
@@ -33,9 +36,19 @@ use base qw( Bar );
 
 package Qux;
 
+package Guff;
+{
+    sub AUTOMETHOD {
+        return sub { return 'Common::foo()' };
+        return;
+    }
+}
 
 package main;
 use Test::More 'no_plan';
+
+my @return = Empty->can('baz');
+is_deeply( \@return, [undef],                => 'can always returns a single result' );
 
 my $meth_ref;
 
@@ -87,4 +100,7 @@ ok( !$meth_ref                               => 'Qux no can foo()'     );
 eval { Qux->foo() };
 ok( $@                                       => 'No Qux foo()'         );
 
-
+$meth_ref = Guff->can('foo');
+ok( !$meth_ref                               => 'Guff no can foo()'    );
+eval { Guff->foo() };
+ok( $@                                       => 'No Guff foo()'        );
